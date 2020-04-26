@@ -12,15 +12,14 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     margin: 0;
-    font-family:  sans-serif;
   }
 `;
 
 const Router = () => (
-  <BrowserRouter basename="/hk">
+  <BrowserRouter>
     <Switch>
       {/* <Route exact path="/callback/" component={Callback} /> */}
-      <Route exact path="*" component={App} />
+      <Route exact path="/:id?" component={App} />
     </Switch>
   </BrowserRouter>
 );

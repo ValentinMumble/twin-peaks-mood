@@ -1,13 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {createGlobalStyle} from 'styled-components';
+import {App} from 'App';
 import * as serviceWorker from './serviceWorker';
 
+const GlobalStyle = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family:  sans-serif;
+  }
+`;
+
+const Router = () => (
+  <BrowserRouter basename="/hk">
+    <Switch>
+      {/* <Route exact path="/callback/" component={Callback} /> */}
+      <Route exact path="*" component={App} />
+    </Switch>
+  </BrowserRouter>
+);
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <>
+    <GlobalStyle />
+    <Router />
+  </>,
   document.getElementById('root')
 );
 

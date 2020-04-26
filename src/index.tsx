@@ -18,7 +18,6 @@ const GlobalStyle = createGlobalStyle`
 const Router = () => (
   <BrowserRouter>
     <Switch>
-      {/* <Route exact path="/callback/" component={Callback} /> */}
       <Route exact path="/:id?" component={App} />
     </Switch>
   </BrowserRouter>

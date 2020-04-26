@@ -21,24 +21,15 @@ const fadeInOpacity = keyframes`
 `;
 
 const Container = styled.div`
-  @font-face {
-    font-family: 'AvantGarde';
-    src: url('ITC_Avant_Garde_Gothic_Demi_Condensed.x-font-ttf');
-  }
-
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   z-index: 10;
-  text-align: center;
-  font-size: 70px;
-  font-family: AvantGarde;
-  font-variant: small-caps;
-  letter-spacing: 1px;
   color: ${BROWN};
   text-shadow: 1.5px 1.5px 0 ${GREEN}, -1.5px -1.5px 0 ${GREEN}, 1.5px -1.5px 0 ${GREEN}, -1.5px 1.5px 0 ${GREEN},
     0px 1.5px 0 ${GREEN}, 1.5px 0px 0 ${GREEN}, 0px -1.5px 0 ${GREEN}, -1.5px 0px 0 ${GREEN}, 5px 3px 0 #111;
+  cursor: default;
 
   animation-name: ${fadeInOpacity};
   animation-timing-function: ease-in;

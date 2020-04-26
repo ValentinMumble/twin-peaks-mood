@@ -1,18 +1,33 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import {Credits, Spacer} from 'components';
 
-const Container = styled.div`
+const Container = styled.div<{hasVideo: boolean}>`
+  @font-face {
+    font-family: 'AvantGarde';
+    src: url('ITC_Avant_Garde_Gothic_Demi_Condensed.x-font-ttf');
+  }
+
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: black;
-  background-image: url('mountain.jpeg');
   background-size: cover;
   z-index: 1;
+  text-align: center;
+  font-size: 70px;
+  font-family: AvantGarde;
+  font-variant: small-caps;
+  letter-spacing: 1px;
+
+  ${({hasVideo}) =>
+    !hasVideo &&
+    css`
+      background-image: url('mountain.jpeg');
+    `}
 `;
 
 const Filter = styled.div`
@@ -38,6 +53,21 @@ const Player = styled.iframe`
   height: 100%;
 `;
 
+const Curtain = styled.div<{isDrawn: boolean}>`
+  position: fixed;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  transition: top 0.2s ease;
+  top: ${({isDrawn}) => (isDrawn ? 0 : -100)}%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const credits = [
   '',
   'TWIN PEAKS',
@@ -54,6 +84,7 @@ const credits = [
   </>,
   'MADCHEN AMICK',
   'DANA ASHBROOK',
+  'AMÉLIE BÛCHE',
   'RICHARD BEYMER',
   'LARA FLYNN BOYLE',
   'SHERILYN FENN',
@@ -97,15 +128,24 @@ const App = ({
   },
 }: RouteComponentProps<AppProps>) => {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isDrawn, draw] = useState(true);
+
+  const handleCurtain = () => {
+    draw(false);
+    audioRef.current?.play();
+  };
 
   return (
-    <Container>
-      {undefined !== id && (
-        <Player src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&enablejsapi=1&controls=0`} />
+    <Container hasVideo={undefined !== id}>
+      <Curtain isDrawn={isDrawn} onClick={handleCurtain}>
+        enter the lodge...
+      </Curtain>
+      {!isDrawn && undefined !== id && (
+        <Player id="player" src={`https://www.youtube.com/embed/${id}?mute=1&enablejsapi=1&controls=0&autoplay=1`} />
       )}
-      <audio autoPlay={true} ref={audioRef} src="/theme.mp3" />
+      <audio ref={audioRef} src="/theme.mp3" />
       <Filter />
-      <Credits credits={credits} />
+      {!isDrawn && <Credits credits={credits} />}
     </Container>
   );
 };

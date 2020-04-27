@@ -1,9 +1,10 @@
 import React, {useRef, useState} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 import {Credits, Spacer} from 'components';
+import YouTube from 'react-youtube';
 
-const Container = styled.div<{hasVideo: boolean}>`
+const Container = styled.div`
   @font-face {
     font-family: 'AvantGarde';
     src: url('ITC_Avant_Garde_Gothic_Demi_Condensed.x-font-ttf');
@@ -18,16 +19,10 @@ const Container = styled.div<{hasVideo: boolean}>`
   background-size: cover;
   z-index: 1;
   text-align: center;
-  font-size: 70px;
+  font-size: 80px;
   font-family: AvantGarde;
   font-variant: small-caps;
   letter-spacing: 1px;
-
-  ${({hasVideo}) =>
-    !hasVideo &&
-    css`
-      background-image: url('mountain.jpeg');
-    `}
 `;
 
 const Filter = styled.div`
@@ -45,20 +40,11 @@ const Small = styled.div`
   font-size: 0.6em;
 `;
 
-const Player = styled.iframe`
-  position: fixed;
-  z-index: 0;
-  border: none;
-  width: 100%;
-  height: 100%;
-`;
-
 const Curtain = styled.div<{isDrawn: boolean}>`
   position: fixed;
   z-index: 20;
   width: 100%;
   height: 100%;
-  background-color: black;
   transition: top 0.2s ease;
   top: ${({isDrawn}) => (isDrawn ? 0 : -100)}%;
   color: white;
@@ -66,6 +52,36 @@ const Curtain = styled.div<{isDrawn: boolean}>`
   display: flex;
   align-items: center;
   justify-content: center;
+  text-shadow: black 5px 5px, black -1px -1px;
+
+  > span {
+    z-index: 2;
+  }
+
+  background: linear-gradient(-135deg, white 25%, transparent 25%) 0 -400px,
+    linear-gradient(135deg, white 25%, transparent 25%) 0 -400px,
+    linear-gradient(-45deg, white 25%, transparent 25%) -400px 400px,
+    linear-gradient(45deg, white 25%, transparent 25%) -400px 400px;
+  background-size: 160px 160px;
+  background-color: black;
+  /* background-repeat: no-repeat; */
+`;
+
+const Shadow = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0, transparent, black);
+`;
+
+const Player = styled(YouTube)`
+  position: fixed;
+  z-index: 0;
+  border: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 `;
 
 const credits = [
@@ -88,6 +104,11 @@ const credits = [
   'RICHARD BEYMER',
   'LARA FLYNN BOYLE',
   'SHERILYN FENN',
+  'WARREN FROST',
+  'PEGGY LIPTON',
+  'JAMES MARSHALL',
+  'EVERETT McGILL',
+  'RAY WISE',
   <>
     JOAN CHEN<Small>as</Small>
     <Small>Jocelyn Packard</Small>
@@ -97,6 +118,10 @@ const credits = [
     PIPER LAURIE
     <Small>as</Small>
     <Small>Katherine Martell</Small>
+  </>,
+  <>
+    <Small>Also starring</Small>
+    RUSS TAMBLYN
   </>,
   'ERIC Da Re',
   <>
@@ -113,6 +138,12 @@ const credits = [
     DAVID J. LATT
   </>,
   <>
+    <Small>Written by</Small>
+    MARK FROST
+    <Small>&amp;</Small>
+    DAVID LYNCH
+  </>,
+  <>
     <Small>Directed by</Small>
     DAVID LYNCH
   </>,
@@ -124,25 +155,30 @@ type AppProps = {
 
 const App = ({
   match: {
-    params: {id},
+    params: {id = 'VtvBpcyQP9M'},
   },
 }: RouteComponentProps<AppProps>) => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isDrawn, draw] = useState(true);
+  const [isDrawn, setDrawn] = useState<boolean>(true);
+  const [player, setPlayer] = useState<YT.Player>();
 
-  const handleCurtain = () => {
-    draw(false);
+  const drawCurtain = () => {
+    setDrawn(false);
     audioRef.current?.play();
+    player?.playVideo();
   };
 
   return (
-    <Container hasVideo={undefined !== id}>
-      <Curtain isDrawn={isDrawn} onClick={handleCurtain}>
-        enter the lodge...
+    <Container>
+      <Curtain isDrawn={isDrawn} onClick={drawCurtain}>
+        <Shadow />
+        <span>enter the lodge...</span>
       </Curtain>
-      {!isDrawn && undefined !== id && (
-        <Player id="player" src={`https://www.youtube.com/embed/${id}?mute=1&enablejsapi=1&controls=0&autoplay=1`} />
-      )}
+      <Player
+        videoId={id}
+        opts={{playerVars: {controls: 0, mute: 1, iv_load_policy: 3}}}
+        onReady={event => setPlayer(event.target)}
+      />
       <audio ref={audioRef} src="/theme.mp3" />
       <Filter />
       {!isDrawn && <Credits credits={credits} />}

@@ -1,10 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
 import styled from 'styled-components';
 import {Credits, Spacer} from 'components';
 import YouTube from 'react-youtube';
-//@ts-ignore add types
-import randomYouTube from 'youtube-random-video';
+import {getRandomVid} from 'youtube-random-video';
 
 const {REACT_APP_YOUTUBE_API_KEY} = process.env;
 
@@ -174,23 +173,20 @@ const App = ({
   };
 
   useEffect(() => {
-    if (undefined === REACT_APP_YOUTUBE_API_KEY) {
+    if (!REACT_APP_YOUTUBE_API_KEY) {
       throw new Error('Missing YouTube API key env variable');
     }
 
     if ('random' === videoId) {
-      randomYouTube.getRandomVid(
-        REACT_APP_YOUTUBE_API_KEY,
-        (error: Error | null, {id}: GoogleApiYouTubeSearchResource) => {
-          if (null !== error) {
-            console.error(error);
+      getRandomVid(REACT_APP_YOUTUBE_API_KEY, (error, {id}) => {
+        if (null !== error) {
+          console.error(error);
 
-            return;
-          }
-
-          setVideoId(id.videoId);
+          return;
         }
-      );
+
+        setVideoId(id.videoId);
+      });
     }
   }, [videoId]);
 

@@ -1,2 +1,2 @@
-export * from 'components/Credits';
-export * from 'components/Spacer';
+export * from './Credits';
+export * from './Spacer';

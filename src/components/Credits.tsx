@@ -1,4 +1,4 @@
-import React, {useState, useEffect, ReactNode} from 'react';
+import {useState, useEffect, ReactNode} from 'react';
 import styled, {keyframes} from 'styled-components';
 
 const DELAY = 4000;

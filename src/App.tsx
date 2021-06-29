@@ -1,8 +1,12 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {RouteComponentProps} from 'react-router-dom';
 import styled from 'styled-components';
 import {Credits, Spacer} from 'components';
 import YouTube from 'react-youtube';
+//@ts-ignore add types
+import randomYouTube from 'youtube-random-video';
+
+const {REACT_APP_YOUTUBE_API_KEY} = process.env;
 
 const Container = styled.div`
   @font-face {
@@ -161,12 +165,34 @@ const App = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isDrawn, setDrawn] = useState<boolean>(true);
   const [player, setPlayer] = useState<YT.Player>();
+  const [videoId, setVideoId] = useState<string>(id);
 
   const drawCurtain = () => {
     setDrawn(false);
     audioRef.current?.play();
     player?.playVideo();
   };
+
+  useEffect(() => {
+    if (undefined === REACT_APP_YOUTUBE_API_KEY) {
+      throw new Error('Missing YouTube API key env variable');
+    }
+
+    if ('random' === videoId) {
+      randomYouTube.getRandomVid(
+        REACT_APP_YOUTUBE_API_KEY,
+        (error: Error | null, {id}: GoogleApiYouTubeSearchResource) => {
+          if (null !== error) {
+            console.error(error);
+
+            return;
+          }
+
+          setVideoId(id.videoId);
+        }
+      );
+    }
+  }, [videoId]);
 
   return (
     <Container>
@@ -175,9 +201,9 @@ const App = ({
         <span>enter the lodge...</span>
       </Curtain>
       <Player
-        videoId={id}
+        videoId={videoId}
         opts={{playerVars: {controls: 0, mute: 1, iv_load_policy: 3}}}
-        onReady={event => setPlayer(event.target)}
+        onReady={({target}) => setPlayer(target)}
       />
       <audio ref={audioRef} src="/theme.mp3" />
       <Filter />

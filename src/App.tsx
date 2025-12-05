@@ -1,11 +1,8 @@
-import {useEffect, useRef, useState} from 'react';
-import {RouteComponentProps} from 'react-router-dom';
+import {useRef, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
-import {Credits, Spacer} from 'components';
+import {Credits, Spacer} from './components';
 import YouTube from 'react-youtube';
-import {getRandomVid} from 'youtube-random-video';
-
-const {REACT_APP_YOUTUBE_API_KEY} = process.env;
 
 const Container = styled.div`
   @font-face {
@@ -85,6 +82,11 @@ const Player = styled(YouTube)`
   height: 100%;
   top: 0;
   left: 0;
+
+  iframe {
+    width: 100% !important;
+    height: 100% !important;
+  }
 `;
 
 const credits = [
@@ -152,43 +154,18 @@ const credits = [
   </>,
 ];
 
-type AppProps = {
-  id: string;
-};
-
-const App = ({
-  match: {
-    params: {id = 'VtvBpcyQP9M'},
-  },
-}: RouteComponentProps<AppProps>) => {
+const App = () => {
+  const params = useParams<{id?: string}>();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isDrawn, setDrawn] = useState<boolean>(true);
   const [player, setPlayer] = useState<YT.Player>();
-  const [videoId, setVideoId] = useState<string>(id);
+  const videoId = params.id || 'VtvBpcyQP9M';
 
   const drawCurtain = () => {
     setDrawn(false);
     audioRef.current?.play();
     player?.playVideo();
   };
-
-  useEffect(() => {
-    if (!REACT_APP_YOUTUBE_API_KEY) {
-      throw new Error('Missing YouTube API key env variable');
-    }
-
-    if ('random' === videoId) {
-      getRandomVid(REACT_APP_YOUTUBE_API_KEY, (error, {id}) => {
-        if (null !== error) {
-          console.error(error);
-
-          return;
-        }
-
-        setVideoId(id.videoId);
-      });
-    }
-  }, [videoId]);
 
   return (
     <Container>
@@ -198,8 +175,8 @@ const App = ({
       </Curtain>
       <Player
         videoId={videoId}
-        opts={{playerVars: {controls: 0, mute: 1, iv_load_policy: 3}}}
-        onReady={({target}) => setPlayer(target)}
+        opts={{playerVars: {controls: 0, mute: 1, iv_load_policy: 3, fs: 1}}}
+        onReady={({target}: {target: YT.Player}) => setPlayer(target)}
       />
       <audio ref={audioRef} src="/theme.mp3" />
       <Filter />

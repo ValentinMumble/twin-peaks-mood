@@ -27,8 +27,16 @@ const Container = styled.div`
   flex-direction: column;
   z-index: 10;
   color: ${BROWN};
-  text-shadow: 1.5px 1.5px 0 ${GREEN}, -1.5px -1.5px 0 ${GREEN}, 1.5px -1.5px 0 ${GREEN}, -1.5px 1.5px 0 ${GREEN},
-    0px 1.5px 0 ${GREEN}, 1.5px 0px 0 ${GREEN}, 0px -1.5px 0 ${GREEN}, -1.5px 0px 0 ${GREEN}, 5px 3px 0 #111;
+  text-shadow:
+    1.5px 1.5px 0 ${GREEN},
+    -1.5px -1.5px 0 ${GREEN},
+    1.5px -1.5px 0 ${GREEN},
+    -1.5px 1.5px 0 ${GREEN},
+    0px 1.5px 0 ${GREEN},
+    1.5px 0px 0 ${GREEN},
+    0px -1.5px 0 ${GREEN},
+    -1.5px 0px 0 ${GREEN},
+    5px 3px 0 #111;
   cursor: default;
 
   animation-name: ${fadeInOpacity};

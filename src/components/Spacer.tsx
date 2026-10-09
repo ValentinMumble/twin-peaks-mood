@@ -7,13 +7,8 @@ type SpacerProps = {
 
 const Spacer = styled.div<SpacerProps>`
   display: flex;
-  width: ${({width}) => width}px;
-  height: ${({height}) => height}px;
+  width: ${({width = 1}) => width}px;
+  height: ${({height = 1}) => height}px;
 `;
-
-Spacer.defaultProps = {
-  width: 1,
-  height: 1
-};
 
 export {Spacer};

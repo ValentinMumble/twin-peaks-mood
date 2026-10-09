@@ -2,11 +2,6 @@ import styled from 'styled-components';
 import YouTube from 'react-youtube';
 
 export const Container = styled.div`
-  @font-face {
-    font-family: 'AvantGarde';
-    src: url('ITC_Avant_Garde_Gothic_Demi_Condensed.x-font-ttf');
-  }
-
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -32,18 +27,13 @@ export const Filter = styled.div`
   z-index: 5;
 `;
 
-export const Small = styled.div`
-  font-variant: initial;
-  font-size: 0.6em;
-`;
-
-export const Curtain = styled.div<{ isDrawn: boolean }>`
+export const Curtain = styled.div<{$isClosed: boolean}>`
   position: fixed;
   z-index: 20;
   width: 100%;
   height: 100%;
   transition: top 0.2s ease;
-  top: ${({ isDrawn }) => (isDrawn ? 0 : -100)}%;
+  top: ${({$isClosed}) => ($isClosed ? 0 : -100)}%;
   color: white;
   cursor: pointer;
   display: flex;

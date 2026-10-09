@@ -12,12 +12,6 @@ const fadeInOpacity = keyframes`
   33% {
     opacity: 1;
   }
-  67% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-  }
 `;
 
 const Container = styled.div`
@@ -54,11 +48,7 @@ const Credits = ({credits}: CreditsProps) => {
   const [current, setCurrent] = useState<number>(0);
 
   useEffect(() => {
-    if (current === credits.length) {
-      setCurrent(0);
-    }
-
-    const timeout = setTimeout(() => setCurrent(current => current + 1), DELAY);
+    const timeout = setTimeout(() => setCurrent(index => (index + 1) % credits.length), DELAY);
 
     return () => clearTimeout(timeout);
   }, [current, credits.length]);

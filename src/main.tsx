@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {createGlobalStyle} from 'styled-components';
 import {App} from './App';
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'AvantGarde';
+    src: url('/ITC_Avant_Garde_Gothic_Demi_Condensed.ttf') format('truetype');
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -20,17 +24,9 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const Router = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/:id?" element={<App />} />
-    </Routes>
-  </BrowserRouter>
-);
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <GlobalStyle />
-    <Router />
+    <App />
   </React.StrictMode>,
 );
